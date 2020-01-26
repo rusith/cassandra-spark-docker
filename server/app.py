@@ -1,6 +1,6 @@
 import os
 from pyspark.sql import SparkSession, Row, functions
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 SPARK_HOST = "ip-172-31-40-156.ap-southeast-1.compute.internal"
 os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={SPARK_HOST} pyspark-shell'
@@ -34,12 +34,15 @@ def get_movies(script, mapper):
     return list(map(mapper, dataRowList))
 
 
+def mapRowToMovie(row):
+  return { 'id': row[0], 'title': row[1], 'averageRating': row[2], 'genres': row[4] }
+
+
 @app.route('/best-movies')
 def best_movies():
-  def map(row):
-    return { 'id': row[0], 'title': row[1], 'averageRating': row[2], 'genres': row[4] }
+  limit = request.args.get('limit') or 20
 
-  movies = get_movies("""
+  movies = get_movies(f"""
   SELECT 
     m.movie_id,
     m.title,
@@ -50,6 +53,28 @@ def best_movies():
   JOIN ratings r ON r.movie_id = m.movie_id
   GROUP BY m.movie_id, m.title, m.genres
   ORDER BY rating_factor DESC
-  """, map)
+  LIMIT {limit}
+  """, mapRowToMovie)
+
+  return jsonify(movies)
+
+
+@app.route('/worst-movies')
+def worst_movies():
+  limit = request.args.get('limit') or 20
+
+  movies = get_movies(f"""
+  SELECT 
+    m.movie_id,
+    m.title,
+    AVG(r.rating) AS average_rating,
+    AVG(r.rating) * COUNT(r.rating) AS rating_factor,
+    m.genres
+  FROM movies m 
+  JOIN ratings r ON r.movie_id = m.movie_id
+  GROUP BY m.movie_id, m.title, m.genres
+  ORDER BY rating_factor ASC
+  LIMIT {limit}
+  """, mapRowToMovie)
 
   return jsonify(movies)
