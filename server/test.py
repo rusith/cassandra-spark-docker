@@ -41,10 +41,13 @@ if __name__ == "__main__":
 
     sqlDF = spark.sql("""
     SELECT 
-      m.*
+      m.movie_id,
+      m.title,
+      AVG(r.rating) AS average_rating,
+      m.genres
     FROM movies m 
     JOIN ratings r ON r.movie_id = m.movie_id
-    ORDER BY AVG(r.rating) DESC
+    ORDER BY average_rating DESC
     """)
     sqlDF.show()
 
