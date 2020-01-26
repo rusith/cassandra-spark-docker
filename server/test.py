@@ -52,8 +52,5 @@ if __name__ == "__main__":
     ORDER BY rating_factor DESC
     """).collect()
 
-    for row in data:
-        print(row[0], row[1], row[2])
-
     # Stop the session
     spark.stop()
