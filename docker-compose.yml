@@ -1,8 +1,6 @@
 version: "3.7"
 networks:
   cluster_net:
-    external:
-      name: cassandra_net
 
 services:
   cassandra:
