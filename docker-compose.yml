@@ -3,21 +3,28 @@ networks:
   cluster_net:
 
 services:
-  cassandra:
+  cassandra-master:
     image: cassandra:3.11
+    environment:
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-master
     deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        window: 120s
+      mode: replicated
       replicas: 1
-    entrypoint:
-    - "sh"
-    - "-c"
-    - export CASSANDRA_SEEDS=$$(nrOfTasks=`getent hosts tasks.cassandra | wc -l` ;
-      many=`getent hosts tasks.cassandra | awk '{print $$1}' | sed "/$$(hostname --ip-address)/d"
-      | paste -d, -s -` ; printf '%s' $$( [ $${nrOfTasks} -gt 1 ] && echo $${many} ||
-      echo "$$(hostname --ip-address)" )) ; /docker-entrypoint.sh cassandra -f
+    volumes:
+        - /mnt/cassandra:/var/lib/cassandra 
+    networks:
+      - cluster_net
+
+  cassandra-slave:
+    image: cassandra:3.11
+    environment:
+      - CASSANDRA_SEEDS=cassandra-master
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-slave
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - cassandra-master
     volumes:
         - /mnt/cassandra:/var/lib/cassandra 
     networks:
