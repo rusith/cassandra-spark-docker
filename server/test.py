@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, Row, functions
 import os
-os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages com.datastax.spark:spark-cassandra-connector_2.4.0-s_2.11 --conf spark.cassandra.connection.host=ip-172-31-40-156.ap-southeast-1.compute.internal pyspark-shell'
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host=ip-172-31-40-156.ap-southeast-1.compute.internal pyspark-shell'
 
 def parseInput(line):
     fields = line.split('|')
