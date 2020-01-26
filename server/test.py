@@ -33,7 +33,13 @@ if __name__ == "__main__":
 
     readUsers.createOrReplaceTempView("movies")
 
-    sqlDF = spark.sql("SELECT * FROM movies LIMIT 10")
+    sqlDF = spark.sql("""
+    SELECT 
+      m.*
+    FROM movies m 
+    JOIN ratings r ON r.movie_id = m.movie_id
+    ORDER BY AVG(m.rating) DESC
+    """)
     sqlDF.show()
 
     # Stop the session
