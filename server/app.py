@@ -40,7 +40,9 @@ def mapRowToMovie(row):
 
 @app.route('/best-movies')
 def best_movies():
-  limit = request.args.get('limit') or 20
+  limit = request.args.get('top') or 20
+  genre = request.args.get('genre')
+  genreWhere = f"WHERE m.genres LIKE LIKE '%{genre}%'" if genre else ''
 
   movies = get_movies(f"""
   SELECT 
@@ -51,6 +53,7 @@ def best_movies():
     m.genres
   FROM movies m 
   JOIN ratings r ON r.movie_id = m.movie_id
+  {genreWhere}
   GROUP BY m.movie_id, m.title, m.genres
   ORDER BY rating_factor DESC
   LIMIT {limit}
@@ -61,8 +64,10 @@ def best_movies():
 
 @app.route('/worst-movies')
 def worst_movies():
-  limit = request.args.get('limit') or 20
+  limit = request.args.get('top') or 20
+  genre = request.args.get('genre')
 
+  genreWhere = f"WHERE m.genres LIKE LIKE '%{genre}%'" if genre else ''
   movies = get_movies(f"""
   SELECT 
     m.movie_id,
@@ -72,6 +77,7 @@ def worst_movies():
     m.genres
   FROM movies m 
   JOIN ratings r ON r.movie_id = m.movie_id
+  {genreWhere}
   GROUP BY m.movie_id, m.title, m.genres
   ORDER BY rating_factor ASC
   LIMIT {limit}
