@@ -39,7 +39,7 @@ if __name__ == "__main__":
     readMovies.createOrReplaceTempView("movies")
     readRatings.createOrReplaceTempView("ratings")
 
-    sqlDF = spark.sql("""
+    data = spark.sql("""
     SELECT 
       m.movie_id,
       m.title,
@@ -50,8 +50,10 @@ if __name__ == "__main__":
     JOIN ratings r ON r.movie_id = m.movie_id
     GROUP BY m.movie_id, m.title, m.genres
     ORDER BY rating_factor DESC
-    """)
-    sqlDF.show()
+    """).collect()
+
+    for row in data:
+        print(row[0], row[1], row[2])
 
     # Stop the session
     spark.stop()
