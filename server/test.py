@@ -44,7 +44,7 @@ if __name__ == "__main__":
       m.*
     FROM movies m 
     JOIN ratings r ON r.movie_id = m.movie_id
-    ORDER BY AVG(m.rating) DESC
+    ORDER BY AVG(r.rating) DESC
     """)
     sqlDF.show()
 
