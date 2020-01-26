@@ -42,7 +42,7 @@ def mapRowToMovie(row):
 def best_movies():
   limit = request.args.get('top') or 20
   genre = request.args.get('genre')
-  genreWhere = f"WHERE m.genres LIKE LIKE '%{genre}%'" if genre else ''
+  genreWhere = f"WHERE m.genres LIKE '%{genre}%'" if genre else ''
 
   movies = get_movies(f"""
   SELECT 
@@ -67,7 +67,7 @@ def worst_movies():
   limit = request.args.get('top') or 20
   genre = request.args.get('genre')
 
-  genreWhere = f"WHERE m.genres LIKE LIKE '%{genre}%'" if genre else ''
+  genreWhere = f"WHERE m.genres LIKE '%{genre}%'" if genre else ''
   movies = get_movies(f"""
   SELECT 
     m.movie_id,
