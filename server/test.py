@@ -44,11 +44,12 @@ if __name__ == "__main__":
       m.movie_id,
       m.title,
       AVG(r.rating) AS average_rating,
+      AVG(r.rating) * COUNT(r.rating) AS rating_factor,
       m.genres
     FROM movies m 
     JOIN ratings r ON r.movie_id = m.movie_id
     GROUP BY m.movie_id, m.title, m.genres
-    ORDER BY average_rating DESC
+    ORDER BY rating_factor DESC
     """)
     sqlDF.show()
 
