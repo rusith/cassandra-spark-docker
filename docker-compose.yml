@@ -10,8 +10,6 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    volumes:
-        - /mnt/cassandra:/var/lib/cassandra 
     networks:
       - cluster_net
 
@@ -25,7 +23,5 @@ services:
       replicas: 1
     depends_on:
       - cassandra-master
-    volumes:
-        - /mnt/cassandra:/var/lib/cassandra 
     networks:
       - cluster_net
