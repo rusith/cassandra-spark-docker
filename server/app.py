@@ -5,14 +5,6 @@ from flask import Flask, jsonify
 SPARK_HOST = "ip-172-31-40-156.ap-southeast-1.compute.internal"
 os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={SPARK_HOST} pyspark-shell'
 
-
-class Movie:
-  def __init__(self, id, title, avg, genres):
-      self.id = id
-      self.title = title
-      self.averageRating = avg
-      self.genres = genres
-
 app = Flask(__name__)
 
 def get_spark():
@@ -45,7 +37,7 @@ def get_movies(script, mapper):
 @app.route('/best-movies')
 def best_movies():
   def map(row):
-    return Movie(row[0], row[1], row[2], row[4] )
+    return { 'id': row[0], 'title': row[1], 'averageRating': row[2], 'genres': row[4] }
 
   movies = get_movies("""
   SELECT 
