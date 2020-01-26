@@ -26,12 +26,18 @@ if __name__ == "__main__":
         # .save()
 
     # Read it back from Cassandra into a new Dataframe
-    readUsers = spark.read\
+    readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
     .options(table="movies", keyspace="movie_lens")\
     .load()
 
-    readUsers.createOrReplaceTempView("movies")
+    readRatings = spark.read\
+    .format("org.apache.spark.sql.cassandra")\
+    .options(table="ratings", keyspace="movie_lens")\
+    .load()
+
+    readMovies.createOrReplaceTempView("movies")
+    readRatings.createOrReplaceTempView("ratings")
 
     sqlDF = spark.sql("""
     SELECT 
