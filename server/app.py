@@ -2,7 +2,7 @@ import os
 from pyspark.sql import SparkSession, Row, functions
 from flask import Flask, jsonify, request
 
-SPARK_HOST = "ip-172-31-40-156.ap-southeast-1.compute.internal"
+SPARK_HOST = "localhost"
 os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={SPARK_HOST} pyspark-shell'
 
 app = Flask(__name__)
@@ -16,12 +16,12 @@ def get_movies(script, mapper):
     spark = get_spark()
     readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="movies", keyspace="movie_lens")\
+    .options(table="movies", keyspace="mov")\
     .load()
 
     readRatings = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="ratings", keyspace="movie_lens")\
+    .options(table="ratings", keyspace="mov")\
     .load()
 
     readMovies.createOrReplaceTempView("movies")
