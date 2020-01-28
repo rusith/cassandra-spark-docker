@@ -14,7 +14,7 @@ def get_spark():
 
 def get_movies(script, mapper):
     spark = get_spark()
-    spark.clearCache()
+    spark.catalog.clearCache()
     readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
     .options(table="movies", keyspace="movie_l")\
