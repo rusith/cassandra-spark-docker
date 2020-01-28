@@ -27,7 +27,7 @@ def get_movies(script, mapper):
     readMovies.createOrReplaceTempView("movies")
     readRatings.createOrReplaceTempView("ratings")
 
-    dataRowList = spark.sql(script).cache().collect()
+    dataRowList = spark.sql(script).collect()
 
     spark.stop()
 
