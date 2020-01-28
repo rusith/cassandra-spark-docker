@@ -90,6 +90,6 @@ def worst_movies():
 
 
 @app.route('/stop-spark')
-def worst_movies():
+def stop_spark():
   spark.stop()
   return jsonify("OK")
