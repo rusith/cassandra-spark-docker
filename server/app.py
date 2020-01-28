@@ -7,13 +7,16 @@ os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassan
 
 app = Flask(__name__)
 
-def get_spark():
-    spark = SparkSession.builder.appName("CassandraIntegration").config("spark.cassandra.connection.host", SPARK_HOST).getOrCreate()
-    spark.sparkContext.setLogLevel("ERROR")
-    return spark
+spark = SparkSession.builder.appName("CassandraIntegration").config("spark.cassandra.connection.host", SPARK_HOST).getOrCreate()
+spark.sparkContext.setLogLevel("ERROR")
+
+# def get_spark():
+    # spark = SparkSession.builder.appName("CassandraIntegration").config("spark.cassandra.connection.host", SPARK_HOST).getOrCreate()
+    # spark.sparkContext.setLogLevel("ERROR")
+    # return spark
 
 def get_movies(script, mapper):
-    spark = get_spark()
+    # spark = get_spark()
     readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
     .options(table="movies", keyspace="mov")\
@@ -29,7 +32,7 @@ def get_movies(script, mapper):
 
     dataRowList = spark.sql(script).cache().collect()
 
-    spark.stop()
+    # spark.stop()
 
     return list(map(mapper, dataRowList))
 
@@ -84,3 +87,9 @@ def worst_movies():
   """, mapRowToMovie)
 
   return jsonify(movies)
+
+
+@app.route('/stop-spark')
+def worst_movies():
+  spark.stop()
+  return jsonify("OK")
