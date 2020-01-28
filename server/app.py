@@ -16,12 +16,12 @@ def get_movies(script, mapper):
     spark = get_spark()
     readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="movies", keyspace="movie")\
+    .options(table="movies", keyspace="movie_l")\
     .load()
 
     readRatings = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="ratings", keyspace="movie")\
+    .options(table="ratings", keyspace="movie_l")\
     .load()
 
     readMovies.createOrReplaceTempView("movies")
