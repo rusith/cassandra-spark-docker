@@ -7,3 +7,16 @@ services:
       - 9042:9042
     networks:
       - casparknet
+  sparkmaster:
+    build: ./sparkmaster
+    image: rusith/sparkmaster
+    hostname: sparkmaster
+    environment:
+      MASTER: spark://master:7077
+      SPARK_CONF_DIR: /conf
+    ports:
+      - 6066:6066
+      - 7077:7077
+      - 8080:8080
+    networks:
+      - sparknet
