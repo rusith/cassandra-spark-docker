@@ -1,0 +1,8 @@
+Click==7.0
+Flask==1.1.1
+itsdangerous==1.1.0
+Jinja2==2.11.1
+MarkupSafe==1.1.1
+py4j==0.10.7
+pyspark==2.4.5
+Werkzeug==1.0.0

@@ -7,16 +7,46 @@ services:
       - 9042:9042
     networks:
       - casparknet
+
   sparkmaster:
-    build: ./sparkmaster
-    image: rusith/sparkmaster
+    build: ./sparkbase
+    image: rusith/csp-sparkbase
+    command: bin/spark-class org.apache.spark.deploy.master.Master -h master
     hostname: sparkmaster
     environment:
-      MASTER: spark://master:7077
+      MASTER: spark://sparkmaster:7077
       SPARK_CONF_DIR: /conf
     ports:
       - 6066:6066
       - 7077:7077
       - 8080:8080
     networks:
-      - sparknet
+      - casparknet
+    deploy:
+      replicas: 1
+
+  sparkworker:
+    image: rusith/csp-sparkbase
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://sparkmaster:7077
+    hostname: sparkworker
+    environment:
+      SPARK_CONF_DIR: /conf
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+    depends_on:
+      - sparkmaster
+    ports:
+      - 8081:8081
+    networks:
+      - casparknet
+  
+  webserver:
+    build: ./webserver/
+    image: rusith/csp-webserver
+    depends_on:
+      - sparkmaster
+    ports:
+      - 5000:5000
+
+networks:
+  casparknet:

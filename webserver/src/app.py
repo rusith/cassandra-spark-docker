@@ -1,14 +1,20 @@
+# This is a sample API that uses the movielens dataset
 import os
 from pyspark.sql import SparkSession, Row, functions
 from flask import Flask, jsonify, request
 
-SPARK_HOST = "ip-172-31-40-156.ap-southeast-1.compute.internal"
-os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={SPARK_HOST} pyspark-shell'
+CASSANDRA_HOST = "cassandra"
+os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={CASSANDRA_HOST} pyspark-shell'
 
 app = Flask(__name__)
 
 def get_spark():
-    spark = SparkSession.builder.appName("CassandraIntegration").config("spark.cassandra.connection.host", SPARK_HOST).getOrCreate()
+    spark = SparkSession.builder\
+    .master("spark://sparkmaster:7077")\
+    .appName("SparkCassandra")\
+    .config("spark.cassandra.connection.host", CASSANDRA_HOST)\
+    .getOrCreate()\
+
     spark.sparkContext.setLogLevel("ERROR")
     return spark
 
@@ -17,12 +23,12 @@ def get_movies(script, mapper):
     spark.catalog.clearCache()
     readMovies = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="movies", keyspace="movie_l")\
+    .options(table="movies", keyspace="movielens")\
     .load()
 
     readRatings = spark.read\
     .format("org.apache.spark.sql.cassandra")\
-    .options(table="ratings", keyspace="movie_l")\
+    .options(table="ratings", keyspace="movielens")\
     .load()
 
     readMovies.createOrReplaceTempView("movies")
