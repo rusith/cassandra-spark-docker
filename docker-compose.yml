@@ -1,27 +1,9 @@
 version: "3.7"
-networks:
-  cluster_net:
-
 services:
-  cassandra-master:
-    image: cassandra:3.11
-    environment:
-      - CASSANDRA_BROADCAST_ADDRESS=cassandra-master
-    deploy:
-      mode: replicated
-      replicas: 1
+  cassandara:
+    image: cassndra:3
+    hostname: cassandra
+    ports:
+      - 9042:9042
     networks:
-      - cluster_net
-
-  cassandra-slave:
-    image: cassandra:3.11
-    environment:
-      - CASSANDRA_SEEDS=cassandra-master
-      - CASSANDRA_BROADCAST_ADDRESS=cassandra-slave
-    deploy:
-      mode: replicated
-      replicas: 1
-    depends_on:
-      - cassandra-master
-    networks:
-      - cluster_net
+      - casparknet
