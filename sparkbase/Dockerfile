@@ -11,7 +11,7 @@ ENV PATH $PATH:$HADOOP_HOME/bin
 
 RUN wget \
  "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
- && tar -C /usr/ -xzvf "hadoop-$HADOOP_VERSION.tar.gz" \
+ && tar -C /usr/ -xzf "hadoop-$HADOOP_VERSION.tar.gz" \
  && rm -rf $HADOOP_HOME/share/doc \
  && chown -R root:root $HADOOP_HOME
 
@@ -22,8 +22,8 @@ ENV SPARK_DIST_CLASSPATH="$HADOOP_HOME/etc/hadoop/*:$HADOOP_HOME/share/hadoop/co
 ENV PATH $PATH:${SPARK_HOME}/bin
 
 RUN wget \
- "https://www.apache.org/dyn/mirrors/mirrors.cgi?action=download&filename=spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz" \
- && tar -C /usr/ -xzvf "${SPARK_PACKAGE}.tgz" \
+ "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_PACKAGE.tgz" \
+ && tar -C /usr/ -xzf "${SPARK_PACKAGE}.tgz" \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
 
