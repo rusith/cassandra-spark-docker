@@ -11,7 +11,7 @@ services:
   sparkmaster:
     build: ./sparkbase
     image: rusith/csp-sparkbase
-    command: bin/spark-class org.apache.spark.deploy.master.Master -h master
+    command: bin/spark-class org.apache.spark.deploy.master.Master -h master --host 0.0.0.0
     hostname: sparkmaster
     environment:
       MASTER: spark://sparkmaster:7077
@@ -47,6 +47,8 @@ services:
       - sparkmaster
     ports:
       - 5000:5000
+    networks:
+      - casparknet
 
 networks:
   casparknet:

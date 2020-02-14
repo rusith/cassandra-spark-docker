@@ -1,5 +1,4 @@
 FROM alpine:3.8
-EXPOSE 5000
 RUN apk update \
   && apk upgrade \
   && apk add bash \
@@ -9,7 +8,12 @@ RUN apk update \
   && pip install --upgrade pip \
   && rm -rf /var/cache/apk/*
 
-COPY ./src /src
+COPY ./src/requirements.txt /src/requirements.txt
+RUN pip3 install -r /src/requirements.txt
+
+ENV FLASK_ENV=production
+ENV FLASK_APP=app.py
+COPY ./src /src/
 WORKDIR /src
-RUN pip3 install -r ./requirements.txt
-CMD run.sh
+CMD flask run --host=0.0.0.0
+EXPOSE 5000

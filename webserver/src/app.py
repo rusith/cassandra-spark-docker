@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession, Row, functions
 from flask import Flask, jsonify, request
 
 CASSANDRA_HOST = "cassandra"
-os.environ['PYSPARK_SUBMIT_ARGS'] = f'--packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={CASSANDRA_HOST} pyspark-shell'
+os.environ['PYSPARK_SUBMIT_ARGS'] = f'--master spark://sparkmaster:7077 --packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0 --conf spark.cassandra.connection.host={CASSANDRA_HOST} pyspark-shell'
 
 app = Flask(__name__)
 
