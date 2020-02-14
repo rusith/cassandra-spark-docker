@@ -1,8 +1,8 @@
 FROM alpine:3.8
-EXPOSE 8000
+EXPOSE 5000
 RUN apk update \
   && apk upgrade \
-  && apk add bash
+  && apk add bash \
   && apk add --update \
   python3 \
   py-pip \
