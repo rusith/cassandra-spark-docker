@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  cassandara:
+  cassandra:
     image: cassandra:3.11
     hostname: cassandra
     ports:
@@ -8,7 +8,7 @@ services:
     networks:
       - casparknet
     environment: 
-      CASSANDRA_SEEDS: cassandara
+      CASSANDRA_SEEDS: cassandra
       CASSANDRA_START_RPC: "true"
 
 
