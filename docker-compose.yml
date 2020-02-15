@@ -7,6 +7,10 @@ services:
       - 9042:9042
     networks:
       - casparknet
+    environment: 
+      CASSANDRA_SEEDS: cassandara
+      CASSANDRA_START_RPC: true
+
 
   sparkmaster:
     build: ./sparkbase
