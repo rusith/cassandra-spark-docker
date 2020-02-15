@@ -13,7 +13,8 @@ RUN wget \
  "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
  && tar -C /usr/ -xzf "hadoop-$HADOOP_VERSION.tar.gz" \
  && rm -rf $HADOOP_HOME/share/doc \
- && chown -R root:root $HADOOP_HOME
+ && chown -R root:root $HADOOP_HOME \
+ && rm "hadoop-$HADOOP_VERSION.tar.gz"
 
 ENV SPARK_VERSION 2.3.2
 ENV SPARK_PACKAGE spark-${SPARK_VERSION}-bin-without-hadoop
@@ -24,7 +25,8 @@ ENV PATH $PATH:${SPARK_HOME}/bin
 RUN wget "https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/$SPARK_PACKAGE.tgz" \
  && tar -C /usr/ -xzf "${SPARK_PACKAGE}.tgz" \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
- && chown -R root:root $SPARK_HOME
+ && chown -R root:root $SPARK_HOME \
+ && rm "${SPARK_PACKAGE}.tgz"
 
 # update the existing packages
 RUN apk update \
